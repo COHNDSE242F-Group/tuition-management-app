@@ -11,6 +11,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.tuitionmanagementapp.model.Teacher;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,29 +35,19 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseHelper = new FirebaseHelper();
 
-        firebaseHelper.writeData("message", "Hello from fixed-URL helper!", new FirebaseHelper.FirebaseCallback() {
+        Teacher teacher = new Teacher("T001", "Perera", 36, "0123456789", "Mathamatics", "perera@gmail.com");
+
+        firebaseHelper.writeData("teachers/" + teacher.getTeacherId(), teacher, new FirebaseHelper.FirebaseCallback() {
             @Override
             public void onSuccess() {
-                Toast.makeText(MainActivity.this, "Write successful", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Teacher saved!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(MainActivity.this, "Write failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
-        firebaseHelper.readData("message", new FirebaseHelper.FirebaseReadCallback() {
-            @Override
-            public void onData(DataSnapshot snapshot) {
-                String value = snapshot.getValue(String.class);
-                Toast.makeText(MainActivity.this, "Read: " + value, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Toast.makeText(MainActivity.this, "Read failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }
