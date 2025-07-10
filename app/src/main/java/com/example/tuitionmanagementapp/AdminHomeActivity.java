@@ -38,6 +38,7 @@ public class AdminHomeActivity extends AppCompatActivity {
     public void setupNavBar() {
         LinearLayout navHome = findViewById(R.id.navHome);
         LinearLayout navRegister = findViewById(R.id.navRegister);
+        LinearLayout navStudent=findViewById(R.id.navStudent);
 
 
         navHome.setOnClickListener(v -> {
@@ -50,6 +51,13 @@ public class AdminHomeActivity extends AppCompatActivity {
 
         navRegister.setOnClickListener(v -> {
             Intent intent = new Intent(this, AdminHomeActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        });
+
+        navStudent.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminAssignStudentActivity.class);
             intent.putExtra("userId", userId);
             startActivity(intent);
             finish();

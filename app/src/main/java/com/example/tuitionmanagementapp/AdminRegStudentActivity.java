@@ -20,7 +20,8 @@ import com.google.android.gms.tasks.Task;
 
 public class AdminRegStudentActivity extends AppCompatActivity {
 
-    private EditText firstName,lastName,address,contactNumber,email;
+    /*private EditText firstName,lastName,address,contactNumber,email;
+
 
 
     FirebaseHelper firebaseHelper;
@@ -35,12 +36,12 @@ public class AdminRegStudentActivity extends AppCompatActivity {
 
         firstName = findViewById(R.id.editTextFirstName);
         lastName = findViewById(R.id.editTextLastName);
-        address = findViewById(R.id.editTextAddress);
         contactNumber = findViewById(R.id.editTextContactNumber);
         email = findViewById(R.id.editTextEmail);
 
         Button btnRegister = findViewById(R.id.btnregister);
 
+        address = findViewById(R.id.editTextAddress);
 
 
         firebaseHelper = new FirebaseHelper();
@@ -57,6 +58,7 @@ public class AdminRegStudentActivity extends AppCompatActivity {
         String addr = address.getText().toString().trim();
         String contact = contactNumber.getText().toString().trim();
         String mail = email.getText().toString().trim();
+
 
        // String studentId = firebaseHelper.getDatabase().getReference("students").push().getKey();
 
@@ -100,7 +102,7 @@ public class AdminRegStudentActivity extends AppCompatActivity {
             }
         });
     }
-
+*/
 
 
 

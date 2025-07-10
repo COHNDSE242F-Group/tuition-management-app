@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        /*firebaseHelper = new FirebaseHelper();
+     /*   firebaseHelper = new FirebaseHelper();
 
         Teacher teacher = new Teacher("T001", "Perera", 36, "0123456789", "Mathamatics", "perera@gmail.com");
 

@@ -7,17 +7,26 @@ public class Student {
     private String homeaddress;
     private String contactNo;
     private String email;
+    private int age;
 
-    // Required empty constructor for Firebase
     public Student() {}
 
-    public Student(String studentId, String firstname, String lastname, String homeaddress, String contactNo, String email) {
+    public Student(String studentId, String firstname, String lastname, String homeaddress, String contactNo, String email, int age) {
         this.studentId = studentId;
         this.firstname = firstname;
         this.lastname = lastname;
         this.homeaddress = homeaddress;
         this.contactNo = contactNo;
         this.email = email;
+        this.age = age;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public String getStudentId() {
