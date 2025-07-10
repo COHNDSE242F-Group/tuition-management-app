@@ -28,6 +28,8 @@ public class AdminHomeActivity extends AppCompatActivity {
             return;
         }
         setupNavBar();
+        getWindow().setStatusBarColor(getResources().getColor(R.color.white));
+
 
 
     }
@@ -59,15 +61,20 @@ public class AdminHomeActivity extends AppCompatActivity {
     }
     public void loadStudentRegister(View view){
         LinearLayout studentCard =findViewById(R.id.studentCard);
-        LinearLayout teacherCard= findViewById(R.id.teacherCard);
+
 
         studentCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, AdminRegStudentActivity.class);
             intent.putExtra("userId", userId);
             startActivity(intent);
             finish();
         });
 
+
+    }
+    
+    public void loadTeacherRegister(View view){
+        LinearLayout teacherCard= findViewById(R.id.teacherCard);
         teacherCard.setOnClickListener(v -> {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("userId", userId);

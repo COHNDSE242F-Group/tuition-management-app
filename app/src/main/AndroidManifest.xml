@@ -19,6 +19,7 @@
 
         <activity android:name=".MainActivity"/>
         <activity android:name=".AdminHomeActivity"/>
+        <activity android:name=".AdminRegStudentActivity"/>
 
 
         <activity

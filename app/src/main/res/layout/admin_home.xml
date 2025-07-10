@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:layout_marginTop="45dp">
 
 
             <LinearLayout
@@ -27,9 +28,10 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="20dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="25dp"
                 android:clickable="true"
-                android:focusable="true">
+                android:focusable="true"
+                android:onClick="loadStudentRegister">
 
                 <LinearLayout
                     android:layout_width="0dp"
