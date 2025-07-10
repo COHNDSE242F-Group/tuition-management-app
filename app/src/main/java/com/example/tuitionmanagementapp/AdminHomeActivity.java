@@ -76,7 +76,7 @@ public class AdminHomeActivity extends AppCompatActivity {
     public void loadTeacherRegister(View view){
         LinearLayout teacherCard= findViewById(R.id.teacherCard);
         teacherCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, AdminRegTeacher.class);
             intent.putExtra("userId", userId);
             startActivity(intent);
             finish();
