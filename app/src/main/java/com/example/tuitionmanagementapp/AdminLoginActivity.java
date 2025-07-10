@@ -85,7 +85,6 @@ public class AdminLoginActivity extends AppCompatActivity {
                     for (DataSnapshot adminSnapshot : snapshot.getChildren()) {
                         String dbEmail = adminSnapshot.child("email").getValue(String.class);
                         String dbPassword = adminSnapshot.child("password").getValue(String.class);
-                        Log.d("AdminLogin", "Checking admin: " + dbEmail);
 
                         if (dbEmail != null && dbPassword != null &&
                                 inputEmail.equals(dbEmail) && inputPW.equals(dbPassword)) {
@@ -103,12 +102,12 @@ public class AdminLoginActivity extends AppCompatActivity {
                     }
                 } else {
                     Toast.makeText(this, "Admin data node empty or missing!", Toast.LENGTH_LONG).show();
-                    Log.e("AdminLogin", "No admin data found at the reference!");
+
                 }
             } else {
                 Exception e = task.getException();
                 Toast.makeText(this, "Firebase error: " + (e != null ? e.getMessage() : "Unknown"), Toast.LENGTH_LONG).show();
-                Log.e("AdminLogin", "Firebase get failed", e);
+
             }
         });
     }
