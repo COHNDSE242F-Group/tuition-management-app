@@ -89,7 +89,7 @@ public class AdminLoginActivity extends AppCompatActivity {
                         if (dbEmail != null && dbPassword != null &&
                                 inputEmail.equals(dbEmail) && inputPW.equals(dbPassword)) {
                             Toast.makeText(AdminLoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(AdminLoginActivity.this, MainActivity.class);
+                            Intent intent = new Intent(AdminLoginActivity.this, AdminHomeActivity.class);
                             intent.putExtra("userId", adminSnapshot.getKey());
                             startActivity(intent);
                             finish();

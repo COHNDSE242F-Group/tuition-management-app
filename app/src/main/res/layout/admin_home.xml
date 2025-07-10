@@ -69,7 +69,9 @@
                 android:padding="20dp"
                 android:layout_marginBottom="16dp"
                 android:clickable="true"
-                android:focusable="true">
+                android:focusable="true"
+                android:onClick="loadStudentRegister"
+                >
 
                 <LinearLayout
                     android:layout_width="0dp"
