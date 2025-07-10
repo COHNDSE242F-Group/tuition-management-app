@@ -24,7 +24,9 @@ public class FirebaseHelper {
         database = FirebaseDatabase.getInstance(DATABASE_URL);
     }
 
-
+    public FirebaseDatabase getDatabase() {
+        return database;
+    }
 
     public void writeData(String path, Object value, final FirebaseCallback callback) {
         DatabaseReference ref = database.getReference(path);
