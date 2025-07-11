@@ -216,6 +216,43 @@ public class AdminLoginActivity extends AppCompatActivity {
                 }
             });
         }
+
+        if (selectedRole.equals("Parent")) {
+            DatabaseReference ref = FirebaseDatabase.getInstance("https://tuition-management-syste-a31c0-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("students");
+            ref.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DataSnapshot snapshot = task.getResult();
+                    if (snapshot.exists()) {
+                        boolean found = false;
+                        for (DataSnapshot adminSnapshot : snapshot.getChildren()) {
+                            String dbEmail = adminSnapshot.child("email").getValue(String.class);
+                            String dbPassword = adminSnapshot.child("password").getValue(String.class);
+
+                            if (dbEmail != null && dbPassword != null &&
+                                    inputEmail.equals(dbEmail) && inputPW.equals(dbPassword)) {
+                                Toast.makeText(AdminLoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(AdminLoginActivity.this, AdminHomeActivity.class);
+                                intent.putExtra("userId", adminSnapshot.getKey());
+                                startActivity(intent);
+                                finish();
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            Toast.makeText(AdminLoginActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(this, "Parent data node empty or missing!", Toast.LENGTH_LONG).show();
+
+                    }
+                } else {
+                    Exception e = task.getException();
+                    Toast.makeText(this, "Firebase error: " + (e != null ? e.getMessage() : "Unknown"), Toast.LENGTH_LONG).show();
+
+                }
+            });
+        }
     }
     public void togglePassword() {
         btnTogglePassword.setOnClickListener(new View.OnClickListener() {

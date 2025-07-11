@@ -37,27 +37,34 @@ public class AdminHomeActivity extends AppCompatActivity {
 
     public void setupNavBar() {
         LinearLayout navHome = findViewById(R.id.navHome);
-        LinearLayout navRegister = findViewById(R.id.navRegister);
-        LinearLayout navStudent=findViewById(R.id.navStudent);
+        LinearLayout navStudent = findViewById(R.id.navStudent);
+        LinearLayout navAccounts=findViewById(R.id.navAccounts);
+        LinearLayout navProfile=findViewById(R.id.navProfile);
 
 
         navHome.setOnClickListener(v -> {
-            Intent intent = new Intent(this, AdminLoginActivity.class);
-            intent.putExtra("userId", userId);
-            startActivity(intent);
-            finish();
-        });
-
-
-        navRegister.setOnClickListener(v -> {
             Intent intent = new Intent(this, AdminHomeActivity.class);
             intent.putExtra("userId", userId);
             startActivity(intent);
             finish();
         });
 
+
         navStudent.setOnClickListener(v -> {
             Intent intent = new Intent(this, AdminAssignStudentActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        });
+
+        navAccounts.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminViewAccountActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        });
+        navProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminViewProfileActivity.class);
             intent.putExtra("userId", userId);
             startActivity(intent);
             finish();

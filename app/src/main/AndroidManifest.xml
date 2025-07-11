@@ -21,6 +21,7 @@
         <activity android:name=".AdminHomeActivity"/>
         <activity android:name=".AdminRegTeacher"/>
         <activity android:name=".AdminAssignStudentActivity"/>
+        <activity android:name=".AdminViewAccountActivity"/>
 
         <activity
             android:name=".AdminLoginActivity"
