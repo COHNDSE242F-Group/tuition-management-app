@@ -24,7 +24,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_marginBottom="30dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="60dp">
+                >
 
                 <TextView
                     android:text="Log In"
@@ -34,7 +36,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
+            <!-- Role Selector -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_field_bg"
+                android:padding="16dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
+                <Spinner
+                    android:id="@+id/spinnerRole"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:spinnerMode="dropdown"
+                    android:popupBackground="@drawable/btn_background"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:textAlignment="center"
+                    android:padding="4dp"
+                    />
+            </LinearLayout>
             <!-- Email Input -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -100,7 +124,8 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
-                android:paddingVertical="16dp">
+                android:paddingVertical="16dp"
+                android:layout_marginTop="60dp">
 
                 <Button
                     android:id="@+id/btnSignIn"

@@ -15,13 +15,17 @@ public class FirebaseHelper {
     private static final String TAG = "FirebaseHelper";
 
     // Put your database URL here once
-    private static final String DATABASE_URL = "https://tuition-management-syste-a31c0-default-rtdb.asia-southeast1.firebasedatabase.app/";
+    private static final String DATABASE_URL = "https://tuition-management-syste-a31c0-default-rtdb.asia-southeast1.firebasedatabase.app";
 
     private final FirebaseDatabase database;
 
     // Constructor initializes FirebaseDatabase with the fixed URL
     public FirebaseHelper() {
         database = FirebaseDatabase.getInstance(DATABASE_URL);
+    }
+
+    public FirebaseDatabase getDatabase() {
+        return database;
     }
 
     public void writeData(String path, Object value, final FirebaseCallback callback) {

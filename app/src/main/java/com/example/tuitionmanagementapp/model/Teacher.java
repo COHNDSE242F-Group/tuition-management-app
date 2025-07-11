@@ -2,20 +2,26 @@ package com.example.tuitionmanagementapp.model;
 
 public class Teacher {
     private String teacherId;
-    private String name;
+    private String fname;
+
+    private String lname;
     private int age;
+    private String homeaddress;
+
     private String contactNo;
     private String subject;
     private String email;
 
     public Teacher() {}
 
-    public Teacher(String teacherId, String name, int age, String contactNo, String subject, String email) {
+    public Teacher(String teacherId, String fname,String lname,String homeaddress, String contactNo,  String email) {
         this.teacherId = teacherId;
-        this.name = name;
-        this.age = age;
+        this.fname = fname;
+        this.lname=lname;
+        this.homeaddress=homeaddress;
+        //this.age = age;
         this.contactNo = contactNo;
-        this.subject = subject;
+        //this.subject = subject;
         this.email = email;
     }
 
@@ -27,12 +33,28 @@ public class Teacher {
         this.teacherId = teacherId;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return fname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.fname = firstName;
+    }
+
+    public String getLastName() {
+        return lname;
+    }
+
+    public void setLastName(String lastName) {
+        this.lname = lastName;
+    }
+
+    public String getHomeaddress() {
+        return homeaddress;
+    }
+
+    public void setHomeaddress(String homeaddress) {
+        this.homeaddress = homeaddress;
     }
 
     public int getAge() {

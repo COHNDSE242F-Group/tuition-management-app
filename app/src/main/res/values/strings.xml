@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">TuitionManagementApp</string>
+    <string-array name="user_roles">
+        <item>Select Role</item>
+        <item>Parent</item>
+        <item>Student</item>
+        <item>Teacher</item>
+        <item>Admin</item>
+    </string-array>
+
 </resources>
