@@ -43,7 +43,6 @@ public class AdminAssignStudentActivity extends AppCompatActivity {
     private List<Student> filteredStudents = new ArrayList<>();
 
     private EditText etSearch;
-    private Button btnSortGrade;
     private String userId;
 
     @Override
@@ -55,7 +54,7 @@ public class AdminAssignStudentActivity extends AppCompatActivity {
 
         etSearch = findViewById(R.id.etSearch);
 
-        btnSortGrade = findViewById(R.id.btnSortGrade);
+
         firebaseHelper = new FirebaseHelper();
 
         etSearch.addTextChangedListener(new TextWatcher() {
@@ -68,10 +67,7 @@ public class AdminAssignStudentActivity extends AppCompatActivity {
 
 
 
-        btnSortGrade.setOnClickListener(v -> {
-            Collections.sort(filteredStudents, Comparator.comparing(Student::getAge));
-            displayStudentRows();
-        });
+
 
         loadClassesAndStudents();
         setupNavBar();
