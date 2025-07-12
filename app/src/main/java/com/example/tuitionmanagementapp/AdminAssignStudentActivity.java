@@ -177,7 +177,7 @@ public class AdminAssignStudentActivity extends AppCompatActivity {
                         if (selectedItems[i]) {
                             Map<String, Object> cls = classList.get(i);
                             String classId = (String) cls.get("classId");
-                            String stcKey = "STC_" + classId;
+                            String stcKey = "ST" + classId;
 
                             // Add this student under that class assignment
                             firebaseHelper.getDatabase()

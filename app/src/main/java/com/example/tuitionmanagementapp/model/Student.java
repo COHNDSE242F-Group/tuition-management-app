@@ -8,11 +8,14 @@ public class Student {
     private String contactNo;
     private String email;
     private int age;
-
+    private String gender;
+    private String guardianName;
+    private String guardianContact;
 
     public Student() {}
 
-    public Student(String studentId, String firstname, String lastname, String homeaddress, String contactNo, String email, int age) {
+    public Student(String studentId, String firstname, String lastname, String homeaddress,
+                   String contactNo, String email, int age, String gender, String guardianName, String guardianContact) {
         this.studentId = studentId;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -20,15 +23,12 @@ public class Student {
         this.contactNo = contactNo;
         this.email = email;
         this.age = age;
+        this.gender = gender;
+        this.guardianName = guardianName;
+        this.guardianContact = guardianContact;
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
+    // Getters and setters
 
     public String getStudentId() {
         return studentId;
@@ -76,5 +76,37 @@ public class Student {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getGuardianName() {
+        return guardianName;
+    }
+
+    public void setGuardianName(String guardianName) {
+        this.guardianName = guardianName;
+    }
+
+    public String getGuardianContact() {
+        return guardianContact;
+    }
+
+    public void setGuardianContact(String guardianContact) {
+        this.guardianContact = guardianContact;
     }
 }
