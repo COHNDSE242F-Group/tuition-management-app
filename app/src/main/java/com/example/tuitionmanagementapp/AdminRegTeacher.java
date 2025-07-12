@@ -1,8 +1,10 @@
 package com.example.tuitionmanagementapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,11 +16,12 @@ public class AdminRegTeacher extends AppCompatActivity {
 
     private EditText firstName, lastName, address, contactNumber, email;
     FirebaseHelper firebaseHelper;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.admin_reg_teacher); 
+        setContentView(R.layout.admin_reg_teacher);
 
         firstName = findViewById(R.id.editTextFirstName);
         lastName = findViewById(R.id.editTextLastName);
@@ -29,8 +32,16 @@ public class AdminRegTeacher extends AppCompatActivity {
         Button btnRegister = findViewById(R.id.btnregister);
 
         firebaseHelper = new FirebaseHelper();
+        setupNavBar();
 
         btnRegister.setOnClickListener(v -> generateNextTeacherId());
+
+        userId = getIntent().getStringExtra("userId");
+        if (userId == null) {
+            Toast.makeText(this, "User ID missing", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
     }
 
     public void registerTeacher(String teacherId){
@@ -78,4 +89,39 @@ public class AdminRegTeacher extends AppCompatActivity {
             }
         });
     }
-}
+    public void setupNavBar() {
+        LinearLayout navHome = findViewById(R.id.navHome);
+        LinearLayout navStudent = findViewById(R.id.navStudent);
+        LinearLayout navAccounts=findViewById(R.id.navAccounts);
+        LinearLayout navProfile=findViewById(R.id.navProfile);
+
+
+        navHome.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminHomeActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        });
+
+
+        navStudent.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminAssignStudentActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        });
+
+        navAccounts.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminViewAccountActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        });
+        navProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminViewProfileActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        });
+
+    }}

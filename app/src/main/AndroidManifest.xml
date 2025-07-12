@@ -22,9 +22,13 @@
         <activity android:name=".AdminRegTeacher"/>
         <activity android:name=".AdminAssignStudentActivity"/>
         <activity android:name=".AdminViewAccountActivity"/>
+        <activity android:name=".AdminViewProfileActivity"/>
+        <activity android:name=".AdminLoginActivity"/>
+
+
 
         <activity
-            android:name=".AdminLoginActivity"
+            android:name=".splashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

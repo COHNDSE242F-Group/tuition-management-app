@@ -70,6 +70,7 @@ public class AdminAssignStudentActivity extends AppCompatActivity {
         });
 
         loadTeachersAndStudents();
+        setupNavBar();
 
         userId = getIntent().getStringExtra("userId");
         if (userId == null) {

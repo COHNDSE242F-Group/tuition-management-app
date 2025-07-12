@@ -22,7 +22,7 @@ public class AdminRegStudentActivity extends AppCompatActivity {
 
     /*private EditText firstName,lastName,address,contactNumber,email;
 
-
+private String userId;
 
     FirebaseHelper firebaseHelper;
 
@@ -47,6 +47,12 @@ public class AdminRegStudentActivity extends AppCompatActivity {
         firebaseHelper = new FirebaseHelper();
 
         btnRegister.setOnClickListener(v -> generateNextStudentId());
+        userId = getIntent().getStringExtra("userId");
+        if (userId == null) {
+            Toast.makeText(this, "User ID missing", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
 
 
@@ -102,6 +108,42 @@ public class AdminRegStudentActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void setupNavBar() {
+        LinearLayout navHome = findViewById(R.id.navHome);
+        LinearLayout navStudent = findViewById(R.id.navStudent);
+        LinearLayout navAccounts=findViewById(R.id.navAccounts);
+        LinearLayout navProfile=findViewById(R.id.navProfile);
+
+
+        navHome.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminHomeActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        });
+
+
+        navStudent.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminAssignStudentActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        });
+
+        navAccounts.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminViewAccountActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        });
+        navProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminViewProfileActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        });
+
 */
 
 
