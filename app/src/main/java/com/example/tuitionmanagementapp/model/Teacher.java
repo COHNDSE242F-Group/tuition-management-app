@@ -9,10 +9,12 @@ public class Teacher {
     private String contactNo;
     private String subject;
     private String email;
+    private String password;
+
 
     public Teacher() {}
 
-    public Teacher(String teacherId, String fname, String lname, String homeaddress, String contactNo, String email, int age, String subject) {
+    public Teacher(String teacherId, String fname, String lname, String homeaddress, String contactNo, String email, int age, String subject ,String passowrd) {
         this.teacherId = teacherId;
         this.fname = fname;
         this.lname = lname;
@@ -21,6 +23,7 @@ public class Teacher {
         this.email = email;
         this.age = age;
         this.subject = subject;
+        this.password=passowrd;
     }
 
     public String getTeacherId() {
@@ -85,5 +88,13 @@ public class Teacher {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

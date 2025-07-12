@@ -73,6 +73,9 @@ public class AdminRegStudentActivity extends AppCompatActivity {
         String guardianPhone = guardianContact.getText().toString().trim();
 
         int studentAge = 0;
+
+        // password as firstName + "123"
+        String password = fName + "123";
         try {
             studentAge = Integer.parseInt(age.getText().toString().trim());
         } catch (NumberFormatException e) {
@@ -80,7 +83,7 @@ public class AdminRegStudentActivity extends AppCompatActivity {
             return;
         }
 
-        Student student = new Student(studentId, fName, lName, addr, contact, mail, studentAge, Gender, guardian, guardianPhone);
+        Student student = new Student(studentId, fName, lName, addr, contact, mail, studentAge, Gender, guardian, guardianPhone,password);
 
         firebaseHelper.writeData("students/" + studentId, student, new FirebaseHelper.FirebaseCallback() {
             @Override
