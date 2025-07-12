@@ -166,7 +166,7 @@ public class AdminLoginActivity extends AppCompatActivity {
 
                                 String passedUserId = adminSnapshot.getKey();
 
-                                Intent intent = new Intent(AdminLoginActivity.this, AdminHomeActivity.class);
+                                Intent intent = new Intent(AdminLoginActivity.this, TeacherHomeActivity.class);
                                 intent.putExtra("userId", passedUserId);
 
 

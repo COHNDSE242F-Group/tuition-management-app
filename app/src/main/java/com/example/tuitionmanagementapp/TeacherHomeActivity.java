@@ -1,5 +1,6 @@
 package com.example.tuitionmanagementapp;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -36,11 +37,15 @@ public class TeacherHomeActivity extends AppCompatActivity {
     private int currentWeekIndex = 0;
     private Button btnPrevWeek;
     private Button btnNextWeek;
+    private String teacherId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_home);
+
+        Intent intent = getIntent();
+        teacherId = intent.getStringExtra("userId");
 
         firebaseHelper = new FirebaseHelper();
 
@@ -188,7 +193,7 @@ public class TeacherHomeActivity extends AppCompatActivity {
                 List<Classes> teacherClasses = new ArrayList<>();
                 for (DataSnapshot classSnap : classSnapshot.getChildren()) {
                     Classes cls = classSnap.getValue(Classes.class);
-                    if (cls != null && "T001".equals(cls.getTeacherId())) {
+                    if (cls != null && teacherId.equals(cls.getTeacherId())) {
                         teacherClasses.add(cls);
                     }
                 }
@@ -319,7 +324,7 @@ public class TeacherHomeActivity extends AppCompatActivity {
                         @Override
                         public void onData(DataSnapshot classSnap) {
                             Classes cls = classSnap.getValue(Classes.class);
-                            if (cls != null && "T001".equals(cls.getTeacherId())) {
+                            if (cls != null && teacherId.equals(cls.getTeacherId())) {
                                 classDates.add(date);
 
                                 if (date.equals(selectedDate)) {
