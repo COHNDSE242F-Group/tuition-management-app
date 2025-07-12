@@ -37,6 +37,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".StudentAttendanceActivity"
+            android:exported="true"> </activity>
+
+        <activity
+            android:name=".StudentAssignmentsActivity"
+            android:exported="true"> </activity>
+
+        <activity
+            android:name=".StudentMaterialsActivity"
+            android:exported="true"> </activity>
+
+        <activity
+            android:name=".StudentScheduleActivity"
+            android:exported="true"> </activity>
+
+        <activity
+            android:name=".StudentHome"
+            android:exported="true"> </activity>
+
     </application>
 
 </manifest>
