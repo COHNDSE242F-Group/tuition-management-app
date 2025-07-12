@@ -10,6 +10,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Map;
+
 public class FirebaseHelper {
 
     private static final String TAG = "FirebaseHelper";
@@ -56,7 +58,33 @@ public class FirebaseHelper {
                 if (callback != null) callback.onError(error.toException());
             }
         });
+    }public void deleteData(String path, String key, FirebaseDeleteCallback callback) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path).child(key);
+        ref.removeValue()
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(callback::onError);
     }
+
+    public void updateData(String path, String key, Map<String, Object> updatedData, FirebaseUpdateCallback callback) {
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path).child(key);
+        ref.updateChildren(updatedData)
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(callback::onError);
+    }
+
+    public interface FirebaseUpdateCallback {
+        void onSuccess();
+        void onError(Exception e);
+    }
+
+
+
+    public interface FirebaseDeleteCallback {
+        void onSuccess();
+        void onError(Exception e);
+    }
+
 
     public interface FirebaseCallback {
         void onSuccess();
