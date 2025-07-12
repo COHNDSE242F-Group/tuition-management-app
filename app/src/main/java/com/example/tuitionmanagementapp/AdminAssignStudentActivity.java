@@ -1,5 +1,6 @@
 package com.example.tuitionmanagementapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,6 +40,7 @@ public class AdminAssignStudentActivity extends AppCompatActivity {
 
     private EditText etSearch;
     private Button btnSortGrade;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,13 @@ public class AdminAssignStudentActivity extends AppCompatActivity {
         });
 
         loadTeachersAndStudents();
+
+        userId = getIntent().getStringExtra("userId");
+        if (userId == null) {
+            Toast.makeText(this, "User ID missing", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
     }
 
     private void loadTeachersAndStudents() {
@@ -124,54 +133,100 @@ public class AdminAssignStudentActivity extends AppCompatActivity {
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             params.setMargins(0, 0, 0, 24);
             container.setLayoutParams(params);
-
             container.setBackgroundResource(android.R.drawable.dialog_holo_light_frame);
 
             TextView tvInfo = new TextView(this);
             tvInfo.setText("Name: " + student.getFirstname() + " " + student.getLastname()
-
                     + "\nGrade: " + student.getAge());
             tvInfo.setTextSize(16f);
             tvInfo.setPadding(0, 0, 0, 12);
 
-            Spinner spinner = new Spinner(this);
-            List<String> teacherNames = new ArrayList<>();
-            for (Teacher t : teacherList) {
-                teacherNames.add(t.getFirstName() + " - " + t.getSubject());
-            }
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                    android.R.layout.simple_spinner_item, teacherNames);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinner.setAdapter(adapter);
-
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                boolean firstLoad = true;
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if (firstLoad) {
-                        firstLoad = false;
-                        return;
-                    }
-
-                    Teacher selectedTeacher = teacherList.get(position);
-                    Map<String, Object> assignment = new HashMap<>();
-                    assignment.put("teacherId", selectedTeacher.getTeacherId());
-
-                    firebaseHelper.getDatabase().getReference("student_teacher_assignments/" + student.getStudentId())
-                            .setValue(assignment)
-                            .addOnSuccessListener(unused -> Toast.makeText(AdminAssignStudentActivity.this, "Assigned!", Toast.LENGTH_SHORT).show())
-                            .addOnFailureListener(e -> Toast.makeText(AdminAssignStudentActivity.this, "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
-            });
+            Button btnAssign = new Button(this);
+            btnAssign.setText("Assign Teachers");
+            btnAssign.setOnClickListener(v -> showMultiTeacherDialog(student));
 
             container.addView(tvInfo);
-            container.addView(spinner);
+            container.addView(btnAssign);
 
             layoutStudentList.addView(container);
         }
     }
+
+    private void showMultiTeacherDialog(Student student) {
+        String[] teacherNames = new String[teacherList.size()];
+        boolean[] selectedItems = new boolean[teacherList.size()];
+
+        for (int i = 0; i < teacherList.size(); i++) {
+            teacherNames[i] = teacherList.get(i).getFirstName() + " - " + teacherList.get(i).getSubject();
+        }
+
+        new android.app.AlertDialog.Builder(this)
+                .setTitle("Assign Teachers to " + student.getFirstname())
+                .setMultiChoiceItems(teacherNames, selectedItems, (dialog, which, isChecked) -> {
+                    selectedItems[which] = isChecked;
+                })
+                .setPositiveButton("Assign", (dialog, which) -> {
+                    Map<String, Object> assignments = new HashMap<>();
+                    for (int i = 0; i < selectedItems.length; i++) {
+                        if (selectedItems[i]) {
+                            String teacherId = teacherList.get(i).getTeacherId();
+                            assignments.put(teacherId, true);
+                        }
+                    }
+
+                    if (!assignments.isEmpty()) {
+                        firebaseHelper.getDatabase()
+                                .getReference("student_teacher_assignments/" + student.getStudentId())
+                                .setValue(assignments)
+                                .addOnSuccessListener(unused -> Toast.makeText(this, "Teachers assigned!", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e -> Toast.makeText(this, "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    } else {
+                        Toast.makeText(this, "No teacher selected", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    public void setupNavBar() {
+        LinearLayout navHome = findViewById(R.id.navHome);
+        LinearLayout navStudent = findViewById(R.id.navStudent);
+        LinearLayout navAccounts=findViewById(R.id.navAccounts);
+        LinearLayout navProfile=findViewById(R.id.navProfile);
+
+
+        navHome.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminHomeActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        });
+
+
+        navStudent.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminAssignStudentActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        });
+
+        navAccounts.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminViewAccountActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        });
+        navProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminViewProfileActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        });
+
+
+
+
+    }
+
+
 }
