@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:orientation="horizontal"
+    android:background="@android:color/white"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <!-- Time Label (e.g. 16:00) -->
+    <TextView
+        android:id="@+id/timeLabel"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="16:00"
+        android:textColor="#3a6073"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- Container for class event -->
+    <FrameLayout
+        android:id="@+id/eventContainer"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:clipChildren="false"
+        android:clipToPadding="false" />
+</LinearLayout>
