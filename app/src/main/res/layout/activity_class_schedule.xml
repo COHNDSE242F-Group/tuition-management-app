@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#F9F9F9">
+
+    <!-- Optional Calendar -->
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:focusedMonthDateColor="#000000"
+        android:selectedWeekBackgroundColor="#3a7bd5"
+        android:weekSeparatorLineColor="#3a6073" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/classScheduleRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="vertical" />
+
+</LinearLayout>

@@ -3,26 +3,24 @@ package com.example.tuitionmanagementapp.model;
 public class Teacher {
     private String teacherId;
     private String fname;
-
     private String lname;
     private int age;
     private String homeaddress;
-
     private String contactNo;
     private String subject;
     private String email;
 
     public Teacher() {}
 
-    public Teacher(String teacherId, String fname,String lname,String homeaddress, String contactNo,  String email) {
+    public Teacher(String teacherId, String fname, String lname, String homeaddress, String contactNo, String email, int age, String subject) {
         this.teacherId = teacherId;
         this.fname = fname;
-        this.lname=lname;
-        this.homeaddress=homeaddress;
-        //this.age = age;
+        this.lname = lname;
+        this.homeaddress = homeaddress;
         this.contactNo = contactNo;
-        //this.subject = subject;
         this.email = email;
+        this.age = age;
+        this.subject = subject;
     }
 
     public String getTeacherId() {

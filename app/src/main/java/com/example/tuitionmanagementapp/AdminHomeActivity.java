@@ -30,6 +30,15 @@ public class AdminHomeActivity extends AppCompatActivity {
         setupNavBar();
         getWindow().setStatusBarColor(getResources().getColor(R.color.white));
 
+        findViewById(R.id.AttendenceCard).setOnClickListener(v -> {
+            Intent intent = new Intent(this, SelectClassForAttendanceActivity.class);
+            startActivity(intent);
+        });
+        findViewById(R.id.ResultsCard).setOnClickListener(v -> {
+            Intent intent = new Intent(this, SelectClassForExamMarksActivity.class);
+            startActivity(intent);
+        });
+
 
 
     }

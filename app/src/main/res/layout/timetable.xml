@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA">
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btnLogout"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Student Timetable"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp" />
+
+            <TableLayout
+                android:id="@+id/tableSchedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="*"
+                android:background="#FFFFFF"
+                android:padding="8dp"
+                android:elevation="2dp">
+
+                <!-- Table Header -->
+                <TableRow>
+                    <TextView
+                        android:text="Class ID"
+                        android:textStyle="bold"
+                        android:padding="6dp" />
+                    <TextView
+                        android:text="Date"
+                        android:textStyle="bold"
+                        android:padding="6dp" />
+                    <TextView
+                        android:text="Start Time"
+                        android:textStyle="bold"
+                        android:padding="6dp" />
+                    <TextView
+                        android:text="Duration"
+                        android:textStyle="bold"
+                        android:padding="6dp" />
+                </TableRow>
+
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Logout Button at the bottom left -->
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="12dp"
+        android:backgroundTint="#FF5252"
+        android:background="@drawable/btn_background"
+        android:textColor="#FFFFFF" />
+</RelativeLayout>

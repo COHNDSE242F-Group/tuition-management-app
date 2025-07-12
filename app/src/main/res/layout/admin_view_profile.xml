@@ -9,175 +9,170 @@
 
 
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="16dp">
+    <ScrollView
 
-            <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="24dp"
+        android:background="#F5F5F5"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Profile Picture -->
+            <ImageView
+                android:id="@+id/imgProfile"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="32dp"
+                android:src="@drawable/ic_profile" />
+
+            <!-- Profile Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="32dp"
+                android:text="Profile"
+                android:textColor="#333333"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <!-- Name -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="600dp"
-                android:padding="32dp"
-                android:background="@android:color/white"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="12dp">
+                android:orientation="horizontal"
+                android:paddingBottom="24dp"
+                android:gravity="center_vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@android:drawable/ic_menu_info_details"
+                    app:tint="#6200EE" />
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginStart="16dp"
+                    android:text="Name:"
+                    android:textColor="#6200EE"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                    <ImageView
-                        android:id="@+id/imgProfile"
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="32dp"
-                        android:src="@drawable/ic_profile" />
+                <TextView
+                    android:id="@+id/textName"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:textColor="#444444"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:paddingBottom="32dp"
-                        android:text="Student Profile"
-                        android:textColor="#333333"
-                        android:textSize="32sp"
-                        android:textStyle="bold" />
+            <!-- Age -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="24dp"
+                android:gravity="center_vertical">
 
-                    <!-- Name -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingBottom="24dp">
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@android:drawable/ic_menu_my_calendar"
+                    app:tint="#6200EE" />
 
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@android:drawable/ic_menu_info_details"
-                            app:tint="#6200EE" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Age:"
+                    android:textColor="#6200EE"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="Name:"
-                            android:textColor="#6200EE"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/textAge"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:textColor="#444444"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:textColor="#444444"
-                            android:textSize="18sp"
-                            android:id="@+id/textName"/>
-                    </LinearLayout>
+            <!-- Contact -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="24dp"
+                android:gravity="center_vertical">
 
-                    <!-- Age -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingBottom="24dp">
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@android:drawable/ic_menu_call"
+                    app:tint="#6200EE" />
 
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@android:drawable/ic_menu_my_calendar"
-                            app:tint="#6200EE" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Contact:"
+                    android:textColor="#6200EE"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="Age:"
-                            android:textColor="#6200EE"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/textContact"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:textColor="#444444"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/textAge"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:textColor="#444444"
-                            android:textSize="18sp" />
-                    </LinearLayout>
+            <!-- Email -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="24dp"
+                android:gravity="center_vertical">
 
-                    <!-- Gender -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingBottom="24dp">
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@android:drawable/ic_dialog_email"
+                    app:tint="#6200EE" />
 
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@android:drawable/ic_menu_manage"
-                            app:tint="#6200EE" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Email:"
+                    android:textColor="#6200EE"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="Gender:"
-                            android:textColor="#6200EE"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/textEmail"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:textColor="#444444"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/textGender"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:textColor="#444444"
-                            android:textSize="18sp" />
-                    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
-                    <!-- Contact -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingBottom="24dp">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@android:drawable/ic_menu_call"
-                            app:tint="#6200EE" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="Contact:"
-                            android:textColor="#6200EE"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/textContact"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:textColor="#444444"
-                            android:textSize="18sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-        </ScrollView>
     <!-- Bottom Navigation -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -215,7 +210,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/navRegister"
+            android:id="@+id/navStudent"
             android:orientation="vertical"
             android:gravity="center_horizontal"
             android:clickable="true"
@@ -228,19 +223,20 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_profile" />
+                android:src="@drawable/ic_student" />
+
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Register"
+                android:text="Student"
                 android:textColor="#407CE2"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/navblank1"
+            android:id="@+id/navAccounts"
             android:orientation="vertical"
             android:gravity="center_horizontal"
             android:clickable="true"
@@ -252,12 +248,13 @@
 
             <ImageView
                 android:layout_width="24dp"
-                android:layout_height="24dp" />
+                android:layout_height="24dp"
+                android:src="@drawable/ic_accounts"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="   "
+                android:text="Accounts"
                 android:textColor="#221F1F"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -290,4 +287,7 @@
 
     </LinearLayout>
 
+
 </LinearLayout>
+
+

@@ -93,7 +93,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/navRegister"
+            android:id="@+id/navStudent"
             android:orientation="vertical"
             android:gravity="center_horizontal"
             android:clickable="true"
@@ -106,20 +106,20 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_profile" />
+                android:src="@drawable/ic_student" />
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Register"
+                android:text="Student"
                 android:textColor="#407CE2"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/navblank1"
+            android:id="@+id/navAccounts"
             android:orientation="vertical"
             android:gravity="center_horizontal"
             android:clickable="true"
@@ -132,12 +132,12 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                />
+                android:src="@drawable/ic_accounts"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="   "
+                android:text="Accounts"
                 android:textColor="#221F1F"
                 android:textSize="12sp"
                 android:textStyle="bold" />

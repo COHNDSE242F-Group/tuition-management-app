@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F9F9F9">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Exam Results"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Student ID Dropdown -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Student ID"
+            android:textSize="16sp"
+            android:textColor="#333333"
+            android:layout_marginBottom="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerStudentId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:background="@drawable/btn_background"
+            android:padding="12dp"
+            android:popupBackground="#ffffff"
+            android:layout_marginBottom="20dp" />
+
+        <!-- TableLayout for exam results -->
+        <TableLayout
+            android:id="@+id/tableResults"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*"
+            android:background="@drawable/btn_background"
+            android:padding="10dp"
+            android:layout_marginBottom="20dp">
+
+            <!-- Table Header -->
+            <TableRow>
+                <TextView
+                    android:text="Date"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:padding="8dp" />
+
+                <TextView
+                    android:text="Exam"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:padding="8dp" />
+
+                <TextView
+                    android:text="Class id"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:padding="8dp" />
+
+                <TextView
+                    android:text="Marks"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:padding="8dp" />
+            </TableRow>
+        </TableLayout>
+
+        <!-- Feedback Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Give Feedback:"
+            android:textSize="16sp"
+            android:textColor="#333333"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/etFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:hint="Write your feedback here"
+            android:background="@drawable/btn_background"
+            android:textColor="#333333"
+            android:textSize="14sp"
+            android:padding="10dp"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Name Input Under Feedback -->
+        <EditText
+            android:id="@+id/etFeedbackName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your name"
+            android:inputType="textPersonName"
+            android:background="@drawable/btn_background"
+            android:textColor="#333333"
+            android:textColorHint="#999999"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Submit Feedback Button -->
+        <Button
+            android:id="@+id/btnSubmitFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Submit Feedback"
+            android:background="@drawable/btn_background"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Back Button -->
+        <Button
+            android:id="@+id/btnBackResults"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Back"
+            android:background="@drawable/btn_background"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+    </LinearLayout>
+</ScrollView>

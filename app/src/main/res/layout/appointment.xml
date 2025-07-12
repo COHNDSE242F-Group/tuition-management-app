@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F9F9F9"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Request Appointment"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginBottom="20dp" />
+
+        <EditText
+            android:id="@+id/editDescription"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:hint="Enter reason for appointment..."
+            android:gravity="top|start"
+            android:background="@android:drawable/edit_text"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:layout_marginBottom="24dp"
+            android:inputType="textMultiLine" />
+
+        <Button
+            android:id="@+id/btnappointment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Request Appointment"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_background"
+            android:padding="12dp"
+            android:elevation="4dp"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_background"
+            android:textSize="16sp"
+            android:padding="10dp"
+            android:elevation="2dp" />
+    </LinearLayout>
+</ScrollView>

@@ -24,6 +24,7 @@ public class AdminViewAccountActivity extends AppCompatActivity {
 
     private LinearLayout studentContainer, teacherContainer;
     private FirebaseHelper firebaseHelper;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,13 @@ public class AdminViewAccountActivity extends AppCompatActivity {
         teacherContainer = findViewById(R.id.teacherContainer);
 
         firebaseHelper = new FirebaseHelper();
+
+        userId = getIntent().getStringExtra("userId");
+        if (userId == null) {
+            Toast.makeText(this, "User ID missing", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         loadStudents();
         loadTeachers();
@@ -173,7 +181,7 @@ public class AdminViewAccountActivity extends AppCompatActivity {
 
         navHome.setOnClickListener(v -> {
             Intent intent = new Intent(this, AdminHomeActivity.class);
-         //   intent.putExtra("userId", userId);
+            intent.putExtra("userId", userId);
             startActivity(intent);
             finish();
         });
@@ -181,20 +189,20 @@ public class AdminViewAccountActivity extends AppCompatActivity {
 
         navStudent.setOnClickListener(v -> {
             Intent intent = new Intent(this, AdminAssignStudentActivity.class);
-         //   intent.putExtra("userId", userId);
+            intent.putExtra("userId", userId);
             startActivity(intent);
             finish();
         });
 
         navAccounts.setOnClickListener(v -> {
             Intent intent = new Intent(this, AdminViewAccountActivity.class);
-         //   intent.putExtra("userId", userId);
+            intent.putExtra("userId", userId);
             startActivity(intent);
             finish();
         });
         navProfile.setOnClickListener(v -> {
             Intent intent = new Intent(this, AdminViewProfileActivity.class);
-          //  intent.putExtra("userId", userId);
+            intent.putExtra("userId", userId);
             startActivity(intent);
             finish();
         });

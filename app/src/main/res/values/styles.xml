@@ -3,4 +3,20 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+    <style name="DashboardButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">160dp</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="DashboardButtonText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#333333</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+
 </resources>
