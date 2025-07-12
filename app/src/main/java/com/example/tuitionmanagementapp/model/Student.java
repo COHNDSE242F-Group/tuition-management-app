@@ -11,11 +11,13 @@ public class Student {
     private String gender;
     private String guardianName;
     private String guardianContact;
+    private String password;
+
 
     public Student() {}
 
     public Student(String studentId, String firstname, String lastname, String homeaddress,
-                   String contactNo, String email, int age, String gender, String guardianName, String guardianContact) {
+                   String contactNo, String email, int age, String gender, String guardianName, String guardianContact,String password) {
         this.studentId = studentId;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -26,6 +28,7 @@ public class Student {
         this.gender = gender;
         this.guardianName = guardianName;
         this.guardianContact = guardianContact;
+        this.password=password;
     }
 
     // Getters and setters
@@ -108,5 +111,12 @@ public class Student {
 
     public void setGuardianContact(String guardianContact) {
         this.guardianContact = guardianContact;
+    }
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
