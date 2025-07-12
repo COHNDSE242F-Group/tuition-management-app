@@ -165,11 +165,9 @@ public class ExamMarksActivity extends AppCompatActivity {
     }
 
     private void loadMarksForExam(String examId) {
-        // Load students for the class
         firebaseHelper.readData("student_class", new FirebaseHelper.FirebaseReadCallback() {
             @Override
             public void onData(@NonNull DataSnapshot snapshot) {
-                // Find the matching student_class entry for classId
                 DataSnapshot targetClassStudentsSnap = null;
                 for (DataSnapshot scSnap : snapshot.getChildren()) {
                     if (classId.equals(scSnap.child("class").getValue(String.class))) {
@@ -177,44 +175,50 @@ public class ExamMarksActivity extends AppCompatActivity {
                         break;
                     }
                 }
+
                 if (targetClassStudentsSnap == null) {
                     runOnUiThread(() -> Toast.makeText(ExamMarksActivity.this, "No students found for class", Toast.LENGTH_SHORT).show());
                     return;
                 }
 
-                // Get all students of the class
-                List<StudentMark> studentMarks = new ArrayList<>();
+                List<String> studentIds = new ArrayList<>();
                 for (DataSnapshot studentIdSnap : targetClassStudentsSnap.getChildren()) {
-                    String studentId = studentIdSnap.getKey();
-
-                    // Initially mark all as absent with null marks
-                    StudentMark sm = new StudentMark(studentId, "", null);
-                    studentMarks.add(sm);
+                    studentIds.add(studentIdSnap.getKey());
                 }
 
-                // Now load the marks for the exam
                 firebaseHelper.readData("exams/" + examId + "/marks", new FirebaseHelper.FirebaseReadCallback() {
                     @Override
                     public void onData(@NonNull DataSnapshot marksSnapshot) {
-                        // marksSnapshot key: studentId, value: mark
-                        for (StudentMark sm : studentMarks) {
-                            Integer mark = marksSnapshot.child(sm.studentId).getValue(Integer.class);
-                            if (mark != null) {
-                                sm.mark = mark;
-                            }
-                            // else remains null = absent
-                        }
+                        List<StudentMark> studentMarks = new ArrayList<>();
 
-                        currentMarks.clear();
-                        for (StudentMark sm : studentMarks) {
-                            currentMarks.put(sm.studentId, sm);
-                        }
+                        for (String studentId : studentIds) {
+                            firebaseHelper.readData("students/" + studentId, new FirebaseHelper.FirebaseReadCallback() {
+                                @Override
+                                public void onData(@NonNull DataSnapshot studentSnap) {
+                                    String firstName = studentSnap.child("firstname").getValue(String.class);
+                                    String lastName = studentSnap.child("lastname").getValue(String.class);
+                                    String fullName = ((firstName != null ? firstName : "") + " " + (lastName != null ? lastName : "")).trim();
 
-                        runOnUiThread(() -> {
-                            adapter = new ExamMarksAdapter(studentMarks, markChangedListener);
-                            recyclerMarks.setAdapter(adapter);
-                            btnSave.setEnabled(false);
-                        });
+                                    Integer mark = marksSnapshot.child(studentId).getValue(Integer.class);
+                                    StudentMark sm = new StudentMark(studentId, fullName, mark);
+                                    studentMarks.add(sm);
+                                    currentMarks.put(studentId, sm);
+
+                                    if (studentMarks.size() == studentIds.size()) {
+                                        runOnUiThread(() -> {
+                                            adapter = new ExamMarksAdapter(studentMarks, markChangedListener);
+                                            recyclerMarks.setAdapter(adapter);
+                                            btnSave.setEnabled(false);
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    Toast.makeText(ExamMarksActivity.this, "Error loading student: " + studentId, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
                     }
 
                     @Override
@@ -242,27 +246,46 @@ public class ExamMarksActivity extends AppCompatActivity {
                         break;
                     }
                 }
+
                 if (targetClassStudentsSnap == null) {
                     runOnUiThread(() -> Toast.makeText(ExamMarksActivity.this, "No students found for class", Toast.LENGTH_SHORT).show());
                     return;
                 }
 
-                List<StudentMark> studentMarks = new ArrayList<>();
+                List<String> studentIds = new ArrayList<>();
                 for (DataSnapshot studentIdSnap : targetClassStudentsSnap.getChildren()) {
-                    String studentId = studentIdSnap.getKey();
-                    studentMarks.add(new StudentMark(studentId, "", null));
+                    studentIds.add(studentIdSnap.getKey());
                 }
 
-                currentMarks.clear();
-                for (StudentMark sm : studentMarks) {
-                    currentMarks.put(sm.studentId, sm);
-                }
+                List<StudentMark> studentMarks = new ArrayList<>();
 
-                runOnUiThread(() -> {
-                    adapter = new ExamMarksAdapter(studentMarks, markChangedListener);
-                    recyclerMarks.setAdapter(adapter);
-                    btnSave.setEnabled(false);
-                });
+                for (String studentId : studentIds) {
+                    firebaseHelper.readData("students/" + studentId, new FirebaseHelper.FirebaseReadCallback() {
+                        @Override
+                        public void onData(@NonNull DataSnapshot studentSnap) {
+                            String firstName = studentSnap.child("firstname").getValue(String.class);
+                            String lastName = studentSnap.child("lastname").getValue(String.class);
+                            String fullName = ((firstName != null ? firstName : "") + " " + (lastName != null ? lastName : "")).trim();
+
+                            StudentMark sm = new StudentMark(studentId, fullName, null);
+                            studentMarks.add(sm);
+                            currentMarks.put(studentId, sm);
+
+                            if (studentMarks.size() == studentIds.size()) {
+                                runOnUiThread(() -> {
+                                    adapter = new ExamMarksAdapter(studentMarks, markChangedListener);
+                                    recyclerMarks.setAdapter(adapter);
+                                    btnSave.setEnabled(false);
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            Toast.makeText(ExamMarksActivity.this, "Error loading student: " + studentId, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
 
             @Override
@@ -294,13 +317,12 @@ public class ExamMarksActivity extends AppCompatActivity {
         btnSave.setEnabled(false);
 
         if (isAddingNewExam) {
-            // Generate a new examId (simple approach)
-            String newExamId = "E" + System.currentTimeMillis();
+            String newExamId = generateNextExamId();
 
             Exam newExam = new Exam();
-            newExam.classId = classId;
             newExam.examId = newExamId;
-            newExam.examName = examName;
+            newExam.classId = classId;
+            newExam.examName = examName;// Add current date if needed
 
             Map<String, Integer> marksMap = new HashMap<>();
             for (StudentMark sm : currentMarks.values()) {
@@ -330,26 +352,21 @@ public class ExamMarksActivity extends AppCompatActivity {
             });
 
         } else {
-            // Update existing exam
             int pos = spinnerExam.getSelectedItemPosition();
             if (pos < 0 || pos >= examList.size()) return;
 
             Exam selectedExam = examList.get(pos);
             selectedExam.examName = examName;
 
-            Map<String, Object> updates = new HashMap<>();
-            updates.put("examName", examName);
-
-            // Prepare marks map
             Map<String, Integer> marksMap = new HashMap<>();
             for (StudentMark sm : currentMarks.values()) {
                 if (sm.mark != null) {
                     marksMap.put(sm.studentId, sm.mark);
                 }
             }
-            updates.put("marks", marksMap);
+            selectedExam.marks = marksMap;
 
-            firebaseHelper.writeData("exams/" + selectedExam.examId, updates, new FirebaseHelper.FirebaseCallback() {
+            firebaseHelper.writeData("exams/" + selectedExam.examId, selectedExam, new FirebaseHelper.FirebaseCallback() {
                 @Override
                 public void onSuccess() {
                     runOnUiThread(() -> {
@@ -369,5 +386,16 @@ public class ExamMarksActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private String generateNextExamId() {
+        int max = 0;
+        for (Exam exam : examList) {
+            try {
+                int num = Integer.parseInt(exam.examId.replaceAll("[^0-9]", ""));
+                if (num > max) max = num;
+            } catch (Exception ignored) {}
+        }
+        return String.format("E%03d", max + 1);
     }
 }

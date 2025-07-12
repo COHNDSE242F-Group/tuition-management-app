@@ -35,10 +35,6 @@ public class ParentHomeActivity extends AppCompatActivity {
         btnAddNotification.setOnClickListener(v -> startActivity(new Intent(this, AddNotificationActivity.class)));
 
         btnTimetable.setOnClickListener(v -> {
-            // Since Spinner is removed, you can:
-            // Option 1: Send a default ID
-            // Option 2: Open ScheduleActivity without childId
-            // Here's Option 1 (you can change "C001" to anything)
             Intent intent = new Intent(this, ScheduleActivity.class);
             intent.putExtra("childId", "C001"); // default or hardcoded ID
             startActivity(intent);

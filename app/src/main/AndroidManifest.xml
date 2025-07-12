@@ -25,15 +25,6 @@
         android:theme="@style/Theme.TuitionManagementApp"
         tools:targetApi="31">
 
-        <activity android:name=".AttendanceActivity" />
-        <activity android:name=".FeeStatusActivity" />
-        <activity android:name=".ResultActivity" />
-        <activity android:name=".AssignmentActivity" />
-        <activity android:name=".AppointmentActivity" />
-        <activity android:name=".AppointmentResponseActivity" />
-        <activity android:name=".ScheduleActivity" />
-        <activity android:name=".AddNotificationActivity" />
-
         <!-- Launcher activity -->
 
         <!-- Launcher activity -->
@@ -66,6 +57,17 @@
         <activity android:name=".TeacherHomeActivity" />
         <activity android:name=".ViewAssignmentsActivity" />
         <activity android:name=".ViewStudyMaterialsActivity" />
+        <activity android:name=".AttendanceActivity" />
+        <activity android:name=".FeeStatusActivity" />
+        <activity android:name=".ResultActivity" />
+        <activity android:name=".AssignmentActivity" />
+        <activity android:name=".AppointmentActivity" />
+        <activity android:name=".AppointmentResponseActivity" />
+        <activity android:name=".ScheduleActivity" />
+        <activity android:name=".AddNotificationActivity" />
+        <activity android:name=".ParentHomeActivity" />
+        <activity android:name=".SelectClassForAttendanceActivity" />
+        <activity android:name=".SelectClassForExamMarksActivity" />
 
         <!-- Barcode scanner -->
         <activity

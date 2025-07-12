@@ -87,7 +87,7 @@ public class ClassScheduleAdapter extends RecyclerView.Adapter<ClassScheduleAdap
             TextView title = eventView.findViewById(R.id.eventTitle);
             TextView desc = eventView.findViewById(R.id.eventDescription);
 
-            title.setText("Grade " + currentClass.getClassId());
+            title.setText("Grade " + currentClass.getGrade());
             desc.setText("Duration: " + currentClass.getDuration() + " hrs");
 
             // Set event view height to match the combined slots
