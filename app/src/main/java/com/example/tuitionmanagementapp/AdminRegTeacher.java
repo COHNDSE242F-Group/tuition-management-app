@@ -14,7 +14,7 @@ import com.google.firebase.database.DataSnapshot;
 
 public class AdminRegTeacher extends AppCompatActivity {
 
-    private EditText firstName, lastName, address, contactNumber, email;
+    private EditText firstName, lastName, address, contactNumber, email, age, subject;
     FirebaseHelper firebaseHelper;
     private String userId;
 
@@ -28,6 +28,9 @@ public class AdminRegTeacher extends AppCompatActivity {
         address = findViewById(R.id.editTextAddress);
         contactNumber = findViewById(R.id.editTextContactNumber);
         email = findViewById(R.id.editTextEmail);
+        age = findViewById(R.id.editTextAge);
+        subject = findViewById(R.id.editTextSubject);
+
 
         Button btnRegister = findViewById(R.id.btnregister);
 
@@ -50,8 +53,10 @@ public class AdminRegTeacher extends AppCompatActivity {
         String addr = address.getText().toString().trim();
         String contact = contactNumber.getText().toString().trim();
         String mail = email.getText().toString().trim();
+        int tAge = Integer.parseInt(age.getText().toString().trim());
+        String tSubject = subject.getText().toString().trim();
 
-        Teacher teacher = new Teacher(teacherId, fName, lName, addr, contact, mail);
+        Teacher teacher = new Teacher(teacherId, fName, lName, addr, contact, mail, tAge, tSubject);
 
         firebaseHelper.writeData("teachers/" + teacher.getTeacherId(), teacher, new FirebaseHelper.FirebaseCallback() {
             @Override
@@ -65,6 +70,7 @@ public class AdminRegTeacher extends AppCompatActivity {
             }
         });
     }
+
 
     private void generateNextTeacherId() {
         firebaseHelper.getDatabase().getReference("teachers").get().addOnCompleteListener(task -> {

@@ -153,6 +153,49 @@
                     android:background="@null" />
             </LinearLayout>
 
+            <!-- Age Input -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_field_bg"
+                android:padding="16dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <EditText
+                    android:id="@+id/editTextAge"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Age"
+                    android:inputType="number"
+                    android:textColor="#221F1F"
+                    android:textSize="14sp"
+                    android:background="@null" />
+            </LinearLayout>
+
+            <!-- Subject Input -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_field_bg"
+                android:padding="16dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <EditText
+                    android:id="@+id/editTextSubject"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Subject"
+                    android:inputType="text"
+                    android:textColor="#221F1F"
+                    android:textSize="14sp"
+                    android:background="@null" />
+            </LinearLayout>
 
 
             <LinearLayout
