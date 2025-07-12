@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tuitionmanagementapp.model.Student;
@@ -34,8 +35,11 @@ public class AdminAssignStudentActivity extends AppCompatActivity {
     private FirebaseHelper firebaseHelper;
 
 
-    private List<Teacher> teacherList = new ArrayList<>();
+
     private List<Student> allStudents = new ArrayList<>();
+
+    private List<Map<String, Object>> classList = new ArrayList<>();
+
     private List<Student> filteredStudents = new ArrayList<>();
 
     private EditText etSearch;
@@ -69,7 +73,7 @@ public class AdminAssignStudentActivity extends AppCompatActivity {
             displayStudentRows();
         });
 
-        loadTeachersAndStudents();
+        loadClassesAndStudents();
         setupNavBar();
 
         userId = getIntent().getStringExtra("userId");
@@ -80,19 +84,19 @@ public class AdminAssignStudentActivity extends AppCompatActivity {
         }
     }
 
-    private void loadTeachersAndStudents() {
-        // Step 1: Load teachers first
-        firebaseHelper.getDatabase().getReference("teachers").get().addOnCompleteListener(task -> {
+    private void loadClassesAndStudents() {
+        firebaseHelper.getDatabase().getReference("classes").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                teacherList.clear();
+                classList.clear();
                 for (DataSnapshot snap : task.getResult().getChildren()) {
-                    Teacher t = snap.getValue(Teacher.class);
-                    teacherList.add(t);
+                    Map<String, Object> cls = (Map<String, Object>) snap.getValue();
+                    classList.add(cls);
                 }
                 loadStudents();
             }
         });
     }
+
 
     private void loadStudents() {
         firebaseHelper.getDatabase().getReference("students").get().addOnCompleteListener(task -> {
@@ -143,8 +147,9 @@ public class AdminAssignStudentActivity extends AppCompatActivity {
             tvInfo.setPadding(0, 0, 0, 12);
 
             Button btnAssign = new Button(this);
-            btnAssign.setText("Assign Teachers");
-            btnAssign.setOnClickListener(v -> showMultiTeacherDialog(student));
+            btnAssign.setText("Assign Classes");
+            btnAssign.setOnClickListener(v -> showMultiClassDialog(student));
+
 
             container.addView(tvInfo);
             container.addView(btnAssign);
@@ -153,41 +158,43 @@ public class AdminAssignStudentActivity extends AppCompatActivity {
         }
     }
 
-    private void showMultiTeacherDialog(Student student) {
-        String[] teacherNames = new String[teacherList.size()];
-        boolean[] selectedItems = new boolean[teacherList.size()];
+    private void showMultiClassDialog(Student student) {
+        String[] classNames = new String[classList.size()];
+        boolean[] selectedItems = new boolean[classList.size()];
 
-        for (int i = 0; i < teacherList.size(); i++) {
-            teacherNames[i] = teacherList.get(i).getFirstName() + " - " + teacherList.get(i).getSubject();
+        for (int i = 0; i < classList.size(); i++) {
+            Map<String, Object> cls = classList.get(i);
+            classNames[i] = "Grade " + cls.get("grade") + " - " + cls.get("subject");
         }
 
-        new android.app.AlertDialog.Builder(this)
-                .setTitle("Assign Teachers to " + student.getFirstname())
-                .setMultiChoiceItems(teacherNames, selectedItems, (dialog, which, isChecked) -> {
+        new AlertDialog.Builder(this)
+                .setTitle("Assign Classes to " + student.getFirstname())
+                .setMultiChoiceItems(classNames, selectedItems, (dialog, which, isChecked) -> {
                     selectedItems[which] = isChecked;
                 })
                 .setPositiveButton("Assign", (dialog, which) -> {
-                    Map<String, Object> assignments = new HashMap<>();
                     for (int i = 0; i < selectedItems.length; i++) {
                         if (selectedItems[i]) {
-                            String teacherId = teacherList.get(i).getTeacherId();
-                            assignments.put(teacherId, true);
+                            Map<String, Object> cls = classList.get(i);
+                            String classId = (String) cls.get("classId");
+                            String stcKey = "STC_" + classId;
+
+                            // Add this student under that class assignment
+                            firebaseHelper.getDatabase()
+                                    .getReference("student_class/" + stcKey + "/class").setValue(classId);
+
+                            firebaseHelper.getDatabase()
+                                    .getReference("student_class/" + stcKey + "/students/" + student.getStudentId())
+                                    .setValue("");
                         }
                     }
 
-                    if (!assignments.isEmpty()) {
-                        firebaseHelper.getDatabase()
-                                .getReference("student_teacher_assignments/" + student.getStudentId())
-                                .setValue(assignments)
-                                .addOnSuccessListener(unused -> Toast.makeText(this, "Teachers assigned!", Toast.LENGTH_SHORT).show())
-                                .addOnFailureListener(e -> Toast.makeText(this, "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                    } else {
-                        Toast.makeText(this, "No teacher selected", Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(this, "Classes assigned!", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
     }
+
 
     public void setupNavBar() {
         LinearLayout navHome = findViewById(R.id.navHome);
