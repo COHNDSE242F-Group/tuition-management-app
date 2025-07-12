@@ -114,12 +114,20 @@ public class AdminLoginActivity extends AppCompatActivity {
                         String dbEmail = adminSnapshot.child("email").getValue(String.class);
                         String dbPassword = adminSnapshot.child("password").getValue(String.class);
 
+
                         if (dbEmail != null && dbPassword != null &&
                                 inputEmail.equals(dbEmail) && inputPW.equals(dbPassword)) {
                             Toast.makeText(AdminLoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+
+
+                            String passedUserId = adminSnapshot.getKey();
+
                             Intent intent = new Intent(AdminLoginActivity.this, AdminHomeActivity.class);
-                            intent.putExtra("userId", adminSnapshot.getKey());
+                            intent.putExtra("userId", passedUserId);
+
+
                             startActivity(intent);
+
                             finish();
                             found = true;
                             break;
@@ -154,8 +162,14 @@ public class AdminLoginActivity extends AppCompatActivity {
                             if (dbEmail != null && dbPassword != null &&
                                     inputEmail.equals(dbEmail) && inputPW.equals(dbPassword)) {
                                 Toast.makeText(AdminLoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+
+
+                                String passedUserId = adminSnapshot.getKey();
+
                                 Intent intent = new Intent(AdminLoginActivity.this, AdminHomeActivity.class);
-                                intent.putExtra("userId", adminSnapshot.getKey());
+                                intent.putExtra("userId", passedUserId);
+
+
                                 startActivity(intent);
                                 finish();
                                 found = true;
@@ -194,8 +208,14 @@ public class AdminLoginActivity extends AppCompatActivity {
                             if (dbEmail != null && dbPassword != null &&
                                     inputEmail.equals(dbEmail) && inputPW.equals(dbPassword)) {
                                 Toast.makeText(AdminLoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+
+
+                                String passedUserId = adminSnapshot.getKey();
+
                                 Intent intent = new Intent(AdminLoginActivity.this, AdminHomeActivity.class);
-                                intent.putExtra("userId", adminSnapshot.getKey());
+                                intent.putExtra("userId", passedUserId);
+
+
                                 startActivity(intent);
                                 finish();
                                 found = true;
@@ -231,8 +251,14 @@ public class AdminLoginActivity extends AppCompatActivity {
                             if (dbEmail != null && dbPassword != null &&
                                     inputEmail.equals(dbEmail) && inputPW.equals(dbPassword)) {
                                 Toast.makeText(AdminLoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+
+
+                                String passedUserId = adminSnapshot.getKey();
+
                                 Intent intent = new Intent(AdminLoginActivity.this, AdminHomeActivity.class);
-                                intent.putExtra("userId", adminSnapshot.getKey());
+                                intent.putExtra("userId", passedUserId);
+
+
                                 startActivity(intent);
                                 finish();
                                 found = true;
