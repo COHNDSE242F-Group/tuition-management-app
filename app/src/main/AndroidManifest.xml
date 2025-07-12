@@ -52,6 +52,8 @@
         <activity android:name=".ViewAttendanceActivity" />
         <activity android:name=".ExamMarksActivity" />
         <activity android:name=".TeacherHomeActivity" />
+        <activity android:name=".ViewAssignmentsActivity" />
+        <activity android:name=".ViewStudyMaterialsActivity" />
 
         <!-- Barcode scanner -->
         <activity

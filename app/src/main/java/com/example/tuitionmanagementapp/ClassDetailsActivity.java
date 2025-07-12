@@ -22,9 +22,13 @@ import com.example.tuitionmanagementapp.model.Schedule;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,6 +45,7 @@ public class ClassDetailsActivity extends AppCompatActivity {
     private static final int PICK_FILE_REQUEST_CODE = 100;
     private Uri fileUri;
     private String teacherId;
+    private boolean isUploadingAssignment = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,15 +82,24 @@ public class ClassDetailsActivity extends AppCompatActivity {
             intent.putExtra("teacherId", teacherId); // Replace with dynamic teacherId if needed
             startActivity(intent);
         });
-        findViewById(R.id.btnAddAssignment).setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-            intent.setType("*/*"); // Or use "application/pdf" for only PDFs
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            startActivityForResult(intent, PICK_FILE_REQUEST_CODE);
-        });
         findViewById(R.id.btnExamMarks).setOnClickListener(v -> {
             Intent intent = new Intent(ClassDetailsActivity.this, ExamMarksActivity.class);
             intent.putExtra("classId", classId); // Replace with the actual class ID
+            startActivity(intent);
+        });
+        findViewById(R.id.btnAddAssignment).setOnClickListener(v -> {
+            isUploadingAssignment = true;
+            pickFile();
+        });
+
+        findViewById(R.id.btnAddStudyMaterials).setOnClickListener(v -> {
+            isUploadingAssignment = false;
+            pickFile();
+        });
+        findViewById(R.id.btnViewStudyMaterials).setOnClickListener(v -> {
+            Intent intent = new Intent(this, ViewAssignmentsActivity.class);
+            intent.putExtra("classId", classId);
+            intent.putExtra("teacherId", teacherId); // Replace with dynamic teacherId if needed
             startActivity(intent);
         });
     }
@@ -157,12 +171,8 @@ public class ClassDetailsActivity extends AppCompatActivity {
             markAttendanceForStudent(scannedStudentId);
         } else if (requestCode == PICK_FILE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             Uri fileUri = data.getData();
-
-            // Persist permission to access this file
             final int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             getContentResolver().takePersistableUriPermission(fileUri, takeFlags);
-
-            // Proceed to upload
             uploadFileToFirebase(fileUri);
         }
     }
@@ -245,29 +255,104 @@ public class ClassDetailsActivity extends AppCompatActivity {
             return;
         }
 
+        try (InputStream inputStream = getContentResolver().openInputStream(fileUri)) {
+            if (inputStream == null) {
+                Toast.makeText(this, "File is not accessible", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Invalid file: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (classId == null || classId.isEmpty()) {
+            Toast.makeText(this, "Class ID is missing. Cannot upload.", Toast.LENGTH_SHORT).show();
+            Log.e("FirebaseUpload", "Missing classId");
+            return;
+        }
+
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         String fileName = System.currentTimeMillis() + "_" + getFileName(fileUri);
-        StorageReference fileRef = storageRef.child("assignments/" + fileName);
 
-        fileRef.putFile(fileUri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    Toast.makeText(this, "Upload successful", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    e.printStackTrace();
-                    Toast.makeText(this, "Upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        // Use different folder based on type
+        String firebaseFolder = isUploadingAssignment ? "assignments" : "materials";
+        StorageReference fileRef = storageRef.child(firebaseFolder + "/" + fileName);
+
+        String mimeType = getContentResolver().getType(fileUri);
+        StorageMetadata metadata = new StorageMetadata.Builder()
+                .setContentType(mimeType != null ? mimeType : "application/octet-stream")
+                .build();
+
+        UploadTask uploadTask = fileRef.putFile(fileUri, metadata);
+
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                String downloadUrl = uri.toString();
+                Log.d("FirebaseUpload", "Download URL: " + downloadUrl);
+
+                // Save metadata
+                String nodePath = isUploadingAssignment ? "assignments" : "materials";
+                String key = FirebaseDatabase.getInstance().getReference(nodePath).child(classId).push().getKey();
+
+                if (key == null) {
+                    Toast.makeText(this, "Failed to generate upload key", Toast.LENGTH_SHORT).show();
+                    Log.e("FirebaseUpload", "Key is null");
+                    return;
+                }
+
+                Map<String, Object> dataMap = new HashMap<>();
+                dataMap.put("fileName", fileName);
+                dataMap.put("fileUrl", downloadUrl);
+                dataMap.put("uploadedAt", System.currentTimeMillis());
+                dataMap.put("uploadedBy", teacherId != null ? teacherId : "unknown");
+
+                firebaseHelper.writeData(nodePath + "/" + classId + "/" + key, dataMap, new FirebaseHelper.FirebaseCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(ClassDetailsActivity.this,
+                                isUploadingAssignment ? "Assignment uploaded!" : "Study material uploaded!",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(ClassDetailsActivity.this,
+                                "Upload metadata failed: " + e.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
                 });
+
+            }).addOnFailureListener(e -> {
+                Toast.makeText(this, "Failed to get file URL", Toast.LENGTH_LONG).show();
+                Log.e("FirebaseUpload", "Download URL fetch failed", e);
+            });
+        });
+
+        uploadTask.addOnFailureListener(e -> {
+            Log.e("FirebaseUpload", "Upload failed", e);
+            Toast.makeText(this, "Upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        });
     }
 
     private String getFileName(Uri uri) {
         Cursor cursor = getContentResolver().query(uri, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
             int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-            String name = cursor.getString(index);
+            if (index != -1) {
+                String name = cursor.getString(index);
+                cursor.close();
+                return name;
+            }
             cursor.close();
-            return name;
         }
         return "file_" + System.currentTimeMillis();
+    }
+
+    private void pickFile() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(intent, PICK_FILE_REQUEST_CODE);
     }
 
 }

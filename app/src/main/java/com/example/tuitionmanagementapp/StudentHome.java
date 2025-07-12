@@ -10,11 +10,15 @@ import androidx.appcompat.app.AppCompatActivity;
 public class StudentHome extends AppCompatActivity {
 
     ImageView ivAttendance, ivAssignments, ivMaterials, ivSchedule;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_home);
+
+        Intent parentIntent = getIntent();
+        userId = parentIntent.getStringExtra("userId");
 
         ivAttendance = findViewById(R.id.ivAttendance);
         ivAssignments = findViewById(R.id.ivAssignments);
@@ -22,19 +26,27 @@ public class StudentHome extends AppCompatActivity {
         ivSchedule = findViewById(R.id.ivSchedule);
 
         ivAttendance.setOnClickListener(v -> {
-            startActivity(new Intent(this, StudentAttendanceActivity.class));
+            Intent intent = new Intent(this, StudentAttendanceActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
         });
 
         ivAssignments.setOnClickListener(v -> {
-            startActivity(new Intent(this, StudentAssignmentsActivity.class));
+            Intent intent = new Intent(this, StudentAssignmentsActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
         });
 
         ivMaterials.setOnClickListener(v -> {
-            startActivity(new Intent(this, StudentMaterialsActivity.class));
+            Intent intent = new Intent(this, StudentMaterialsActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
         });
 
         ivSchedule.setOnClickListener(v -> {
-            startActivity(new Intent(this, StudentScheduleActivity.class));
+            Intent intent = new Intent(this, StudentScheduleActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
         });
     }
 }

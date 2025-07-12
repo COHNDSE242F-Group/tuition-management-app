@@ -5,6 +5,7 @@ import static androidx.activity.result.ActivityResultCallerKt.registerForActivit
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,26 +18,35 @@ import androidx.cardview.widget.CardView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-// import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class StudentAssignmentsActivity extends AppCompatActivity {
 
     LinearLayout layoutAssignments;
     FirebaseHelper firebaseHelper;
-    String userId = "S001"; // hardcoded student id
-
-    // String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    String userId; // Current student user id
 
     FirebaseStorage storage;
 
     ActivityResultLauncher<Intent> filePickerLauncher;
 
-    String uploadingAssignmentId; //  which assignment student is uploading for
+    String uploadingAssignmentId; // Which assignment student is uploading for
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_assignments);
+
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("userId");
+        if (userId == null || userId.trim().isEmpty()) {
+            Toast.makeText(this, "No userId provided in Intent", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
 
         layoutAssignments = findViewById(R.id.layoutAssignments);
         firebaseHelper = new FirebaseHelper();
@@ -52,34 +62,72 @@ public class StudentAssignmentsActivity extends AppCompatActivity {
                     }
                 });
 
-        /*Dummy data part
-        addAssignmentCard("A001", "Math Homework", "Solve page 12-14", "https://example.com/sample.pdf");
-        addAssignmentCard("A002", "English Essay", "Write 200 words", "");
-*/
+        // Step 1: Load all classes student belongs to
+        loadStudentClasses();
+    }
 
-        // Firebase part
-        firebaseHelper.readData("assignments", new FirebaseHelper.FirebaseReadCallback() {
+    private void loadStudentClasses() {
+        firebaseHelper.readData("student_class", new FirebaseHelper.FirebaseReadCallback() {
             @Override
             public void onData(DataSnapshot snapshot) {
-                layoutAssignments.removeAllViews();
-                for (DataSnapshot child : snapshot.getChildren()) {
-                    String assignmentId = child.getKey();
-                    String title = child.child("title").getValue(String.class);
-                    String desc = child.child("description").getValue(String.class);
-                    String url = child.child("url").getValue(String.class);
-                    addAssignmentCard(assignmentId, title, desc, url);
+                List<String> classIds = new ArrayList<>();
+                for (DataSnapshot studentClassSnap : snapshot.getChildren()) {
+                    String classId = studentClassSnap.child("class").getValue(String.class);
+                    if (classId == null) continue;
+
+                    // Check if student exists in this class's "students"
+                    if (studentClassSnap.child("students").hasChild(userId)) {
+                        classIds.add(classId);
+                    }
+                }
+
+                if (classIds.isEmpty()) {
+                    Toast.makeText(StudentAssignmentsActivity.this, "No classes found for student", Toast.LENGTH_SHORT).show();
+                } else {
+                    loadAssignmentsForClasses(classIds);
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(StudentAssignmentsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(StudentAssignmentsActivity.this, "Failed to load student classes: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
-    private void addAssignmentCard(String assignmentId, String title, String description, String fileUrl) {
+    private void loadAssignmentsForClasses(List<String> classIds) {
+        layoutAssignments.removeAllViews();
+
+        // We'll load all assignments under "assignments" node and filter by classId in memory
+        firebaseHelper.readData("assignments", new FirebaseHelper.FirebaseReadCallback() {
+            @Override
+            public void onData(DataSnapshot snapshot) {
+                for (DataSnapshot classNode : snapshot.getChildren()) {
+                    String classId = classNode.getKey();
+                    if (classIds.contains(classId)) {
+                        // This class has assignments
+                        for (DataSnapshot assignmentSnap : classNode.getChildren()) {
+                            String assignmentId = assignmentSnap.getKey();
+                            String fileName = assignmentSnap.child("fileName").getValue(String.class);
+                            String fileUrl = assignmentSnap.child("fileUrl").getValue(String.class);
+                            // You can add title/description if you store them, or use fileName as title
+                            String title = fileName != null ? fileName : "Assignment " + assignmentId;
+                            String description = ""; // Add description field if you want
+
+                            addAssignmentCard(assignmentId, classId, title, description, fileUrl);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(StudentAssignmentsActivity.this, "Failed to load assignments: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void addAssignmentCard(String assignmentId, String classId, String title, String description, String fileUrl) {
         CardView card = new CardView(this);
         card.setCardElevation(6);
         card.setRadius(16);
@@ -106,8 +154,14 @@ public class StudentAssignmentsActivity extends AppCompatActivity {
         tvDesc.setTextSize(16f);
         tvDesc.setTextColor(getResources().getColor(android.R.color.darker_gray));
 
+        TextView tvClass = new TextView(this);
+        tvClass.setText("Class ID: " + classId);
+        tvClass.setTextSize(14f);
+        tvClass.setTextColor(getResources().getColor(android.R.color.black));
+
         innerLayout.addView(tvTitle);
         innerLayout.addView(tvDesc);
+        innerLayout.addView(tvClass);
 
         // View Assignment
         if (fileUrl != null && !fileUrl.isEmpty()) {

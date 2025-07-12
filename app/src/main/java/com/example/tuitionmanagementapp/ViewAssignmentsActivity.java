@@ -1,79 +1,72 @@
 package com.example.tuitionmanagementapp;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tuitionmanagementapp.model.Assignment;
 import com.google.firebase.database.DataSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewAssignmentsActivity extends AppCompatActivity {
 
-    private String classId, teacherId;
+    private RecyclerView recyclerView;
+    private AssignmentAdapter adapter;
+    private List<Assignment> assignmentList = new ArrayList<>();
+
     private FirebaseHelper firebaseHelper;
-    private LinearLayout assignmentContainer;
+    private String classId;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_assignments);
 
-        classId = getIntent().getStringExtra("classId");
-        teacherId = getIntent().getStringExtra("teacherId");
-        firebaseHelper = new FirebaseHelper();
-        assignmentContainer = findViewById(R.id.assignmentContainer);
+        recyclerView = findViewById(R.id.recyclerViewAssignments);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        if (classId != null && teacherId != null) {
-            loadAssignments();
+        adapter = new AssignmentAdapter(this, assignmentList);
+        recyclerView.setAdapter(adapter);
+
+        firebaseHelper = new FirebaseHelper();
+        classId = getIntent().getStringExtra("classId");
+
+        if (classId != null) {
+            loadAssignments(classId);
         } else {
-            Toast.makeText(this, "Missing data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Class ID is missing", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 
-    private void loadAssignments() {
-        firebaseHelper.readData("assignments", new FirebaseHelper.FirebaseReadCallback() {
+    private void loadAssignments(String classId) {
+        firebaseHelper.readData("assignments/" + classId, new FirebaseHelper.FirebaseReadCallback() {
             @Override
             public void onData(DataSnapshot snapshot) {
-                boolean hasAssignments = false;
-
+                assignmentList.clear();
                 for (DataSnapshot snap : snapshot.getChildren()) {
-                    String dbClassId = snap.child("classId").getValue(String.class);
-                    String dbTeacherId = snap.child("teacherId").getValue(String.class);
-                    String documentUrl = snap.child("document").getValue(String.class);
-                    String assignmentId = snap.child("assignmentId").getValue(String.class);
-
-                    if (dbClassId != null && dbClassId.equals(classId)
-                            && dbTeacherId != null && dbTeacherId.equals(teacherId)) {
-
-                        hasAssignments = true;
-
-                        Button downloadBtn = new Button(ViewAssignmentsActivity.this);
-                        downloadBtn.setText("Download " + assignmentId);
-                        downloadBtn.setLayoutParams(new LinearLayout.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT
-                        ));
-                        downloadBtn.setOnClickListener(v -> {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(documentUrl));
-                            startActivity(intent);
-                        });
-
-                        assignmentContainer.addView(downloadBtn);
+                    Assignment assignment = snap.getValue(Assignment.class);
+                    if (assignment != null) {
+                        assignmentList.add(assignment);
                     }
                 }
+                adapter.notifyDataSetChanged();
 
-                if (!hasAssignments) {
+                if (assignmentList.isEmpty()) {
                     Toast.makeText(ViewAssignmentsActivity.this, "No assignments found", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onError(Exception e) {
+                Log.e("ViewAssignments", "Failed to load assignments", e);
                 Toast.makeText(ViewAssignmentsActivity.this, "Failed to load assignments", Toast.LENGTH_LONG).show();
             }
         });

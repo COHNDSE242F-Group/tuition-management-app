@@ -1,5 +1,6 @@
 package com.example.tuitionmanagementapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -9,55 +10,125 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.google.firebase.database.DataSnapshot;
-// import com.google.firebase.auth.FirebaseAuth;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 public class StudentScheduleActivity extends AppCompatActivity {
 
     LinearLayout layoutSchedule;
     FirebaseHelper firebaseHelper;
-
-    // String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-    String userId = "S001"; // hardcoded student ID
+    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_schedule);
 
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("userId");
+
+        if (userId == null || userId.trim().isEmpty()) {
+            Toast.makeText(this, "No userId provided", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
         layoutSchedule = findViewById(R.id.layoutSchedule);
         firebaseHelper = new FirebaseHelper();
 
-        /*  Dummy data
-        addScheduleCard("Monday", "Mathematics", "08:00 - 09:30");
-        addScheduleCard("Tuesday", "English", "10:00 - 11:30");
-        addScheduleCard("Wednesday", "Science", "13:00 - 14:30");
-*/
+        loadStudentSchedule();
+    }
 
+    private void loadStudentSchedule() {
+        firebaseHelper.readData("student_class", new FirebaseHelper.FirebaseReadCallback() {
+            @Override
+            public void onData(DataSnapshot snapshot) {
+                List<String> classIds = new ArrayList<>();
 
+                for (DataSnapshot scSnapshot : snapshot.getChildren()) {
+                    String classId = scSnapshot.child("class").getValue(String.class);
+                    DataSnapshot studentsSnapshot = scSnapshot.child("students");
 
-    firebaseHelper.readData("schedule/" + userId, new FirebaseHelper.FirebaseReadCallback() {
-    @Override
-    public void onData(DataSnapshot snapshot) {
-        layoutSchedule.removeAllViews();
-        for (DataSnapshot child : snapshot.getChildren()) {
-            String day = child.child("day").getValue(String.class);
-            String subject = child.child("subject").getValue(String.class);
-            String time = child.child("time").getValue(String.class);
-            addScheduleCard(day, subject, time);
+                    if (studentsSnapshot.hasChild(userId)) {
+                        classIds.add(classId);
+                    }
+                }
+
+                loadSchedulesForClasses(classIds);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(StudentScheduleActivity.this, "Failed to load student classes", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void loadSchedulesForClasses(List<String> classIds) {
+        firebaseHelper.readData("schedule", new FirebaseHelper.FirebaseReadCallback() {
+            @Override
+            public void onData(DataSnapshot snapshot) {
+                layoutSchedule.removeAllViews();
+
+                for (DataSnapshot schSnapshot : snapshot.getChildren()) {
+                    String classId = schSnapshot.child("classId").getValue(String.class);
+                    String date = schSnapshot.child("date").getValue(String.class);
+                    String startTime = schSnapshot.child("startTime").getValue(String.class);
+                    Integer duration = schSnapshot.child("duration").getValue(Integer.class);
+
+                    if (classId != null && classIds.contains(classId)) {
+                        fetchSubjectAndDisplay(classId, date, startTime, duration);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(StudentScheduleActivity.this, "Failed to load schedules", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void fetchSubjectAndDisplay(String classId, String date, String startTime, Integer duration) {
+        firebaseHelper.readData("classes/" + classId, new FirebaseHelper.FirebaseReadCallback() {
+            @Override
+            public void onData(DataSnapshot classSnapshot) {
+                String subject = classSnapshot.child("subject").getValue(String.class);
+                String timeRange = formatTimeRange(startTime, duration);
+                addScheduleCard(date, subject != null ? subject : "Unknown", timeRange);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(StudentScheduleActivity.this, "Failed to load subject", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private String formatTimeRange(String startTime, Integer durationHours) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(sdf.parse(startTime));
+
+            String startFormatted = sdf.format(calendar.getTime());
+
+            if (durationHours != null) {
+                calendar.add(Calendar.HOUR_OF_DAY, durationHours);
+            }
+
+            String endFormatted = sdf.format(calendar.getTime());
+            return startFormatted + " - " + endFormatted;
+        } catch (Exception e) {
+            return startTime + " - ?";
         }
     }
 
-    @Override
-    public void onError(Exception e) {
-        Toast.makeText(StudentScheduleActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-    }
-});
-
-
-    }
-
-    private void addScheduleCard(String day, String subject, String time) {
+    private void addScheduleCard(String date, String subject, String time) {
         CardView card = new CardView(this);
         card.setCardElevation(6);
         card.setRadius(16);
@@ -67,17 +138,17 @@ public class StudentScheduleActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        cardParams.setMargins(0, 0, 0, 16); // spacing
+        cardParams.setMargins(0, 0, 0, 16);
         card.setLayoutParams(cardParams);
 
         LinearLayout innerLayout = new LinearLayout(this);
         innerLayout.setOrientation(LinearLayout.VERTICAL);
         innerLayout.setPadding(24, 24, 24, 24);
 
-        TextView tvDay = new TextView(this);
-        tvDay.setText("📅 " + day);
-        tvDay.setTextSize(18f);
-        tvDay.setTextColor(getResources().getColor(android.R.color.black));
+        TextView tvDate = new TextView(this);
+        tvDate.setText("📅 " + date);
+        tvDate.setTextSize(18f);
+        tvDate.setTextColor(getResources().getColor(android.R.color.black));
 
         TextView tvTime = new TextView(this);
         tvTime.setText("🕒 " + time);
@@ -89,12 +160,11 @@ public class StudentScheduleActivity extends AppCompatActivity {
         tvSubject.setTextSize(16f);
         tvSubject.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
 
-        innerLayout.addView(tvDay);
+        innerLayout.addView(tvDate);
         innerLayout.addView(tvTime);
         innerLayout.addView(tvSubject);
 
         card.addView(innerLayout);
         layoutSchedule.addView(card);
     }
-
 }

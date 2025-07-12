@@ -1,5 +1,6 @@
 package com.example.tuitionmanagementapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.LinearLayout;
@@ -10,51 +11,98 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.google.firebase.database.DataSnapshot;
- //import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class StudentAttendanceActivity extends AppCompatActivity {
 
     LinearLayout layoutAttendance;
     FirebaseHelper firebaseHelper;
-    String userId = "S001"; // hardcoded student id
-    // String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
+    String userId; // e.g., "S001"
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_attendance);
 
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("userId");
+        if (userId == null || userId.trim().isEmpty()) {
+            Toast.makeText(this, "No userId provided in Intent", Toast.LENGTH_LONG).show();
+            finish(); // close the activity gracefully
+            return;
+        }
+
         layoutAttendance = findViewById(R.id.layoutAttendance);
         firebaseHelper = new FirebaseHelper();
 
-        //  Firebase part: read data from attendance/
-        firebaseHelper.readData("attendance/" + userId, new FirebaseHelper.FirebaseReadCallback() {
+        loadStudentClassIds();
+    }
+
+    private void loadStudentClassIds() {
+        firebaseHelper.readData("student_class", new FirebaseHelper.FirebaseReadCallback() {
             @Override
             public void onData(DataSnapshot snapshot) {
-                layoutAttendance.removeAllViews(); // clear old cards
-                for (DataSnapshot child : snapshot.getChildren()) {
-                    String date = child.child("date").getValue(String.class);
-                    String status = child.child("status").getValue(String.class);
-                    addAttendanceCard(date, status);
+                List<String> enrolledClassIds = new ArrayList<>();
+
+                for (DataSnapshot scSnapshot : snapshot.getChildren()) {
+                    String classId = scSnapshot.child("class").getValue(String.class);
+                    DataSnapshot studentsSnapshot = scSnapshot.child("students");
+
+                    if (studentsSnapshot.hasChild(userId)) {
+                        enrolledClassIds.add(classId);
+                    }
+                }
+
+                checkAttendanceForClasses(enrolledClassIds);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(StudentAttendanceActivity.this, "Error loading student_class: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void checkAttendanceForClasses(List<String> classIds) {
+        firebaseHelper.readData("attendance", new FirebaseHelper.FirebaseReadCallback() {
+            @Override
+            public void onData(DataSnapshot snapshot) {
+                layoutAttendance.removeAllViews(); // clear previous views
+
+                Map<String, Boolean> processed = new HashMap<>();
+
+                for (DataSnapshot attSnapshot : snapshot.getChildren()) {
+                    String classId = attSnapshot.child("classId").getValue(String.class);
+                    String date = attSnapshot.child("date").getValue(String.class);
+
+                    if (classId == null || date == null) continue;
+
+                    if (classIds.contains(classId)) {
+                        boolean isPresent = attSnapshot.child("students").hasChild(userId);
+                        String status = isPresent ? "Present" : "Absent";
+
+                        // Avoid duplicate display (optional safeguard)
+                        String uniqueKey = classId + "_" + date;
+                        if (!processed.containsKey(uniqueKey)) {
+                            addAttendanceCard("Class " + classId + " - " + date, status);
+                            processed.put(uniqueKey, true);
+                        }
+                    }
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(StudentAttendanceActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(StudentAttendanceActivity.this, "Error loading attendance: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        /*
-        // Dummy data part
-        addAttendanceCard("2024-07-01", "Present");
-        addAttendanceCard("2024-07-02", "Absent");
-        addAttendanceCard("2024-07-03", "Present");
-        */
     }
 
-    private void addAttendanceCard(String date, String status) {
+    private void addAttendanceCard(String title, String status) {
         CardView card = new CardView(this);
         card.setCardElevation(6);
         card.setRadius(16);
@@ -64,7 +112,7 @@ public class StudentAttendanceActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        cardParams.setMargins(0, 0, 0, 16); // spacing
+        cardParams.setMargins(0, 0, 0, 16);
         card.setLayoutParams(cardParams);
 
         LinearLayout innerLayout = new LinearLayout(this);
@@ -72,12 +120,12 @@ public class StudentAttendanceActivity extends AppCompatActivity {
         innerLayout.setPadding(24, 24, 24, 24);
 
         TextView tvDate = new TextView(this);
-        tvDate.setText("📅 Date: " + date);
+        tvDate.setText("📅 " + title);
         tvDate.setTextSize(16f);
         tvDate.setTextColor(getResources().getColor(android.R.color.black));
 
         TextView tvStatus = new TextView(this);
-        tvStatus.setText("✅ Status: " + status);
+        tvStatus.setText("Status: " + status);
         tvStatus.setTextSize(16f);
         tvStatus.setTextColor(status.equalsIgnoreCase("Present") ?
                 getResources().getColor(android.R.color.holo_green_dark) :
