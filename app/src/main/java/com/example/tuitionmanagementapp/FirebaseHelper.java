@@ -59,15 +59,14 @@ public class FirebaseHelper {
             }
         });
     }public void deleteData(String path, String key, FirebaseDeleteCallback callback) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path).child(key);
+        DatabaseReference ref = database.getReference(path).child(key);
         ref.removeValue()
                 .addOnSuccessListener(aVoid -> callback.onSuccess())
                 .addOnFailureListener(callback::onError);
     }
 
     public void updateData(String path, String key, Map<String, Object> updatedData, FirebaseUpdateCallback callback) {
-
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path).child(key);
+        DatabaseReference ref = database.getReference(path).child(key);
         ref.updateChildren(updatedData)
                 .addOnSuccessListener(aVoid -> callback.onSuccess())
                 .addOnFailureListener(callback::onError);

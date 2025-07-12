@@ -272,19 +272,24 @@ public class AdminViewAccountActivity extends AppCompatActivity {
             updatedData.put("contactNo", inputContact.getText().toString());
             updatedData.put("homeaddress", inputAddress.getText().toString());
             updatedData.put("age", Integer.parseInt(inputAge.getText().toString()));
-            updatedData.put("gender", inputGender.getText().toString());
-            updatedData.put("guardianName", inputGuardianName.getText().toString());
-            updatedData.put("guardianContact", inputGuardianContact.getText().toString());
+            updatedData.put("gender", inputGender.getText().toString().trim());
+            updatedData.put("guardianName", inputGuardianName.getText().toString().trim());
+            updatedData.put("guardianContact", inputGuardianContact.getText().toString().trim());
+
 
             firebaseHelper.updateData("students", studentId, updatedData, new FirebaseHelper.FirebaseUpdateCallback() {
                 @Override
                 public void onSuccess() {
                     Toast.makeText(AdminViewAccountActivity.this, "Student updated successfully", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "Student update successful");
+
                     loadStudents(); // Refresh list
                 }
 
                 @Override
                 public void onError(Exception e) {
+                    Log.e(TAG, "Update failed: ", e);
+
                     Toast.makeText(AdminViewAccountActivity.this, "Update failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
