@@ -41,6 +41,15 @@ public class AdminViewProfileActivity extends AppCompatActivity {
 
         setupNavBar();
 
+        findViewById(R.id.btnLogout).setOnClickListener(v -> {
+
+            Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, AdminLoginActivity.class); // Change to your login screen
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
+
         if (userId != null && !userId.isEmpty()) {
             databaseRef = FirebaseDatabase.getInstance("https://tuition-management-syste-a31c0-default-rtdb.asia-southeast1.firebasedatabase.app")
                     .getReference("admin")
