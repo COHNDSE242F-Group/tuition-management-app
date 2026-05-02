@@ -57,6 +57,7 @@ public class AdminAssignStudentActivity extends AppCompatActivity {
 
         firebaseHelper = new FirebaseHelper();
 
+
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -138,7 +139,7 @@ public class AdminAssignStudentActivity extends AppCompatActivity {
 
             TextView tvInfo = new TextView(this);
             tvInfo.setText("Name: " + student.getFirstname() + " " + student.getLastname()
-                    + "\nGrade: " + student.getAge());
+                    + "\nAge: " + student.getAge());
             tvInfo.setTextSize(16f);
             tvInfo.setPadding(0, 0, 0, 12);
 

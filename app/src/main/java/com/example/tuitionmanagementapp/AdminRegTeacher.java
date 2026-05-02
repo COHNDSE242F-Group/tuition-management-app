@@ -18,6 +18,7 @@ public class AdminRegTeacher extends AppCompatActivity {
     FirebaseHelper firebaseHelper;
     private String userId;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -55,8 +56,9 @@ public class AdminRegTeacher extends AppCompatActivity {
         String mail = email.getText().toString().trim();
         int tAge = Integer.parseInt(age.getText().toString().trim());
         String tSubject = subject.getText().toString().trim();
+        String password = fName + "123";
 
-        Teacher teacher = new Teacher(teacherId, fName, lName, addr, contact, mail, tAge, tSubject);
+        Teacher teacher = new Teacher(teacherId, fName, lName, addr, contact, mail, tAge, tSubject,password);
 
         firebaseHelper.writeData("teachers/" + teacher.getTeacherId(), teacher, new FirebaseHelper.FirebaseCallback() {
             @Override
